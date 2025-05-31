@@ -1,2 +1,3 @@
-# potential-lamp
-Entra ID JML Lifecycle Automation with Python &amp; Powershell.
+#EntraID_JML_Lifecycle-Automation
+
+#Entra ID JML Lifecycle Automation with Python & Powershell.
