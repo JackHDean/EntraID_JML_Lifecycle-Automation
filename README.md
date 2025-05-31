@@ -1,3 +1,3 @@
-#EntraID_JML_Lifecycle-Automation
+EntraID_JML_Lifecycle-Automation
 
-#Entra ID JML Lifecycle Automation with Python & Powershell.
+Entra ID JML Lifecycle Automation with Python & Powershell.
