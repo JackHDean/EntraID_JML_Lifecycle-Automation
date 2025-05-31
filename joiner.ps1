@@ -1,10 +1,38 @@
-$users = Import-Csv -Path "users.csv"
-$logPath = "logs/joiner_log.csv"
+$users = Import-Csv -Path ".\users.csv"
+$tenant = "jackhd12outlook.onmicrosoft.com"
 
 foreach ($user in $users) {
-    $username = "$($user.first_name).$($user.last_name)"
-    Write-Host "Creating user: $username in $($user.department)"
+    $upn = "$($user.username)@$tenant"
 
-    $logLine = "$($user.user_id),$username,$($user.department),$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-    Add-Content -Path $logPath -Value $logLine
+    # Check if user already exists
+    $existing = Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction SilentlyContinue
+    if ($existing) {
+        Write-Host "⚠️ $upn already exists"
+        continue
+    }
+
+    $passwordProfile = @{
+        ForceChangePasswordNextSignIn = $true
+        Password = "P@ssw0rd123!"
+    }
+
+    $userParams = @{
+        AccountEnabled    = $true
+        DisplayName       = $user.display_name
+        MailNickname      = $user.username
+        UserPrincipalName = $upn
+        PasswordProfile   = $passwordProfile
+    }
+
+    try {
+        New-MgUser @userParams
+        Add-Content -Path "logs\joiner_log.txt" -Value "$(Get-Date) | JOINER | Created $upn in $($user.department)"
+        Write-Host "Created user $upn"
+    }
+    catch {
+        Write-Host "Error creating user $($upn): $_"
+
+
+        Add-Content -Path "logs\joiner_log.txt" -Value "$(Get-Date) | JOINER | Error with $upn - $_"
+    }
 }

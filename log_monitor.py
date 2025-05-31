@@ -1,15 +1,13 @@
-import csv
-from pathlib import Path
+from datetime import datetime
 
-def read_log(file_path):
-    if not Path(file_path).exists():
-        print(f"Log {file_path} not found.")
-        return
-    print(f"\nReading {file_path}")
-    with open(file_path, newline='') as csvfile:
-        for row in csv.reader(csvfile):
-            print(" | ".join(row))
+def parse_log(path):
+    print("=== Identity Lifecycle Logs ===\n")
+    with open(path, "r") as log:
+        for line in log:
+            date, stage, message = line.strip().split(" | ", 2)
+            print(f"[{stage}] {date} → {message}")
 
-read_log("logs/joiner_log.csv")
-read_log("logs/mover_log.csv")
-read_log("logs/leaver_log.csv")
+if __name__ == "__main__":
+    parse_log("logs\joiner_log.txt")
+    parse_log("logs\mover_log.txt")
+    parse_log("logs\leaver_log.txt")
