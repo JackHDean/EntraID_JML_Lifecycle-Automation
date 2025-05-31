@@ -1,8 +1,20 @@
-$userIdToUpdate = "u001"
-$newDepartment = "Marketing"
-$logPath = "logs/mover_log.csv"
+$users = Import-Csv -Path ".\users.csv"
 
-Write-Host "Updating $userIdToUpdate's department to $newDepartment"
+$tenant = "jackhd12outlook.onmicrosoft.com
 
-$logLine = "$userIdToUpdate,$newDepartment,$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-Add-Content -Path $logPath -Value $logLine
+foreach ($user in $users) {
+    $upn = "$($user.username)@$tenant"
+
+    try {
+        $existing = Get-MgUser -UserId $upn -ErrorAction Stop
+
+        Update-MgUser -UserId $upn `
+            -Department $user.department `
+            
+
+        Add-Content -Path logs\mover_log.txt -Value "$(Get-Date) | MOVER | Updated $upn to $($user.department)"
+    }
+    catch {
+        Add-Content -Path logs\mover_log.txt -Value "$(Get-Date) | MOVER | Error with $upn - $_"
+    }
+}

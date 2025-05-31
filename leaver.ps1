@@ -1,7 +1,21 @@
-$userId = "u002"
-$logPath = "logs/leaver_log.csv"
+$users = Import-Csv -Path ".\users.csv"
+$tenant = "jackhd12outlook.onmicrosoft.com
 
-Write-Host "Deactivating user ID: $userId"
 
-$logLine = "$userId,Deactivated,$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-Add-Content -Path $logPath -Value $logLine
+foreach ($user in $users) {
+    $upn = "$($user.username)@$tenant"
+
+    try {
+        $existing = Get-MgUser -UserId $upn -ErrorAction Stop
+
+        Update-MgUser -UserId $upn `
+            -AccountEnabled $false `
+            -Department "Ex-Employees" `
+            -JobTitle "Former Employee"
+
+        Add-Content -Path logs\leaver_log.txt -Value "$(Get-Date) | LEAVER | Disabled and moved $upn to Ex-Employees"
+    }
+    catch {
+        Add-Content -Path logs\leaver_log.txt -Value "$(Get-Date) | LEAVER | Error with $upn - $_"
+    }
+}
