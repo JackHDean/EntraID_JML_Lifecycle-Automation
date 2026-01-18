@@ -1,4 +1,4 @@
-Entra ID JML Lifecycle Automation with Python & Powershell.
+Entra ID Joiners, Movers, Leavers Lifecycle Automation with Python & Powershell.
 
 This program automates the Joiner, Mover, Leaver Lifecylce within IAM utilising scripts for each process. 
 
