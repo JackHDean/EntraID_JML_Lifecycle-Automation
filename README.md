@@ -6,4 +6,3 @@ How it works:
 
 1. User data entered into CSV file. 
 2. Joiner script runs which connects to Microsoft Graph API and my personal MS Account with my Entry ID tenant ID to input users into the Entra ID tenant.
-3.  
